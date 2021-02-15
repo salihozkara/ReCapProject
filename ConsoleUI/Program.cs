@@ -17,7 +17,7 @@ namespace ConsoleUI
             CarManager carManager = new CarManager(new EfCarDal());
             UserManager userManager = new UserManager(new EfUserDal());
 
-
+            
             //colorManager.Add(new Color{Name = "kırmızı"});
             //carManager.Add(new Car{BrandId = 2,ColorId = 1,DailyPrice = 1250,Description = "",ModelYear = 2001,Name = "sasdsa"});
             //userManager.Add(new User{FirstName = "salih",LastName = "özkara",Email = "salih@gamil.com"});

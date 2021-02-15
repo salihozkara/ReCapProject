@@ -19,12 +19,15 @@ namespace Business.Concrete
 
         public IResult Add(Rental entity)
         {
-            Rental result = this.Get(p=>p.CarId==entity.CarId).Data;
+            var result = this.GetAll(r=>r.CarId==entity.CarId).Data;
             if (result!=null)
             {
-                if (result.RentDate == null)
+                foreach (var rental in result)
                 {
-                    return new ErrorResult();
+                    if (rental.ReturnDate == null)
+                    {
+                        return new ErrorResult();
+                    }
                 }
             }
             _rental.Add(entity);
