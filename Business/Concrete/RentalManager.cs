@@ -19,16 +19,16 @@ namespace Business.Concrete
 
         public IResult Add(Rental entity)
         {
-            var result = this.Get(p=>p.Id==entity.Id);
-            if (result==null || entity.ReturnDate!=null)
+            Rental result = this.Get(p=>p.CarId==entity.CarId).Data;
+            if (result!=null)
             {
-                _rental.Add(entity);
-                return new SuccessResult();
+                if (result.RentDate == null)
+                {
+                    return new ErrorResult();
+                }
             }
-            else
-            {
-                return new ErrorResult();
-            }
+            _rental.Add(entity);
+            return new SuccessResult();
         }
 
         public IResult Delete(Rental entity)
