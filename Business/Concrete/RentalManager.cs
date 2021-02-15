@@ -20,7 +20,7 @@ namespace Business.Concrete
         public IResult Add(Rental entity)
         {
             var result = this.Get(p=>p.Id==entity.Id);
-            if (result==null)
+            if (result==null || entity.ReturnDate!=null)
             {
                 _rental.Add(entity);
                 return new SuccessResult();
