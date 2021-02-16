@@ -23,7 +23,7 @@ namespace ConsoleUI
             //userManager.Add(new User{FirstName = "salih",LastName = "özkara",Email = "salih@gamil.com"});
             //userManager.Update(new User { Id = 1,FirstName = "salih", LastName = "özkara", Email = "salih@gamil.com",Password = "123"});
             //customerManager.Add(new Customer{CompanyName = "salihltd",UserId = 1});
-            Console.WriteLine(rentalManager.Add(new Rental { CarId = 1, CustomerId = 1, RentDate = DateTime.Now }).Success.ToString());
+            Console.WriteLine(rentalManager.Add(new Rental { CarId = 2, CustomerId = 1, RentDate = DateTime.Now }).Success.ToString());
         }
     }
 }

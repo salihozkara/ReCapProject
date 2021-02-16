@@ -30,14 +30,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<Color> Get(Expression<Func<Color, bool>> filter)
+        public IDataResult<Color> GetById(int id)
         {
-            return new SuccessDataResult<Color>(_color.Get(filter));
+            return new SuccessDataResult<Color>(_color.Get(c=>c.Id==id));
         }
 
-        public IDataResult<List<Color>> GetAll(Expression<Func<Color, bool>> filter = null)
+        public IDataResult<List<Color>> GetAll()
         {
-            return new SuccessDataResult<List<Color>>(_color.GetAll(filter));
+            return new SuccessDataResult<List<Color>>(_color.GetAll());
         }
 
         public IResult Update(Color color)

@@ -36,14 +36,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<Car> Get(Expression<Func<Car, bool>> filter)
+        public IDataResult<Car> GetById(int id)
         {
-            return new SuccessDataResult<Car>(_car.Get(filter));
+            return new SuccessDataResult<Car>(_car.Get(c=>c.Id==id));
         }
 
-        public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter = null)
+        public IDataResult<List<Car>> GetAll()
         {
-            return new SuccessDataResult<List<Car>>(_car.GetAll(filter));
+            return new SuccessDataResult<List<Car>>(_car.GetAll());
         }
         
         public IDataResult<List<CarDetailDto>> GetCarDetails()

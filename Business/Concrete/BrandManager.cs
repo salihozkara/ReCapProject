@@ -30,14 +30,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<Brand> Get(Expression<Func<Brand, bool>> filter)
+        public IDataResult<Brand> GetById(int id)
         {
-            return new SuccessDataResult<Brand>(_brand.Get(filter));
+            return new SuccessDataResult<Brand>(_brand.Get(b=>b.Id==id));
         }
 
-        public IDataResult<List<Brand>> GetAll(Expression<Func<Brand, bool>> filter=null)
+        public IDataResult<List<Brand>> GetAll()
         {
-            return new SuccessDataResult<List<Brand>>(_brand.GetAll(filter));
+            return new SuccessDataResult<List<Brand>>(_brand.GetAll());
         }
         
         public IResult Update(Brand brand)

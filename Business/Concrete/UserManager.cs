@@ -29,14 +29,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<User> Get(Expression<Func<User, bool>> filter)
+        public IDataResult<User> GetById(int id)
         {
-            return new SuccessDataResult<User>(_user.Get(filter));
+            return new SuccessDataResult<User>(_user.Get(u=>u.Id==id));
         }
 
-        public IDataResult<List<User>> GetAll(Expression<Func<User, bool>> filter = null)
+        public IDataResult<List<User>> GetAll()
         {
-            return new SuccessDataResult<List<User>>(_user.GetAll(filter));
+            return new SuccessDataResult<List<User>>(_user.GetAll());
         }
 
         public IResult Update(User entity)

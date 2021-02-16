@@ -11,7 +11,7 @@ namespace Core.Business
         IResult Add(TEntity entity);
         IResult Delete(TEntity entity);
         IResult Update(TEntity entity);
-        IDataResult<List<TEntity>> GetAll(Expression<Func<TEntity, bool>> filter = null);
-        IDataResult<TEntity> Get(Expression<Func<TEntity, bool>> filter);
+        IDataResult<List<TEntity>> GetAll();
+        IDataResult<TEntity> GetById(int id);
     }
 }

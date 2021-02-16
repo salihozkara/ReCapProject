@@ -19,17 +19,16 @@ namespace Business.Concrete
 
         public IResult Add(Rental entity)
         {
-            var result = this.GetAll(r=>r.CarId==entity.CarId).Data;
-            if (result!=null)
+            var result = _rental.GetAll(r=>r.CarId==entity.CarId);
+            
+            foreach (var rental in result)
             {
-                foreach (var rental in result)
+                if (rental.ReturnDate == null)
                 {
-                    if (rental.ReturnDate == null)
-                    {
                         return new ErrorResult();
-                    }
                 }
             }
+            
             _rental.Add(entity);
             return new SuccessResult();
         }
@@ -40,14 +39,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<Rental> Get(Expression<Func<Rental, bool>> filter)
+        public IDataResult<Rental> GetById(int id)
         {
-            return new SuccessDataResult<Rental>(_rental.Get(filter));
+            return new SuccessDataResult<Rental>(_rental.Get(r=>r.Id==id));
         }
 
-        public IDataResult<List<Rental>> GetAll(Expression<Func<Rental, bool>> filter = null)
+        public IDataResult<List<Rental>> GetAll()
         {
-            return new SuccessDataResult<List<Rental>>(_rental.GetAll(filter));
+            return new SuccessDataResult<List<Rental>>(_rental.GetAll());
         }
 
         public IResult Update(Rental entity)
