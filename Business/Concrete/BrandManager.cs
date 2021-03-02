@@ -3,6 +3,9 @@ using Business.Abstract;
 using Entities.Concrete;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Core.Business;
@@ -11,39 +14,57 @@ namespace Business.Concrete
 {
     public class BrandManager : IBrandService
     {
-        private IBrandDal _brand;
+        private IBrandDal _brandDal;
 
-        public BrandManager(IBrandDal brand)
+        public BrandManager(IBrandDal brandDal)
         {
-            _brand = brand;
+            _brandDal = brandDal;
         }
 
+        [ValidationAspect(typeof(BrandValidator))]
         public IResult Add(Brand brand)
         {
-            _brand.Add(brand);
+            _brandDal.Add(brand);
             return new SuccessResult();
         }
 
         public IResult Delete(Brand brand)
         {
-            _brand.Delete(brand);
+            _brandDal.Delete(brand);
             return new SuccessResult();
         }
 
         public IDataResult<Brand> GetById(int id)
         {
-            return new SuccessDataResult<Brand>(_brand.Get(b=>b.Id==id));
+            var result = _brandDal.Get(p => p.Id == id);
+
+            if (result == null)
+            {
+                return new ErrorDataResult<Brand>(Messages.GetErrorBrandMessage);
+            }
+            else
+            {
+                return new SuccessDataResult<Brand>(result, Messages.GetSuccessBrandMessage);
+            }
         }
 
         public IDataResult<List<Brand>> GetAll()
         {
-            return new SuccessDataResult<List<Brand>>(_brand.GetAll());
+            var result = _brandDal.GetAll();
+            if (result == null)
+            {
+                return new ErrorDataResult<List<Brand>>(Messages.GetErrorBrandMessage);
+            }
+            else
+            {
+                return new SuccessDataResult<List<Brand>>(result, Messages.GetSuccessBrandMessage);
+            }
         }
         
         public IResult Update(Brand brand)
         {
-            _brand.Update(brand);
-            return new SuccessResult();
+            _brandDal.Update(brand);
+            return new SuccessResult(Messages.EditBrandMessage);
         }
 
     }

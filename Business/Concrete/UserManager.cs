@@ -4,45 +4,54 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using DataAccess.Abstract;
 
 namespace Business.Concrete
 {
     public class UserManager : IUserService
     {
-        private IUserDal _user;
+        private IUserDal _userDal;
 
-        public UserManager(IUserDal user)
+        public UserManager(IUserDal userDal)
         {
-            _user = user;
+            _userDal = userDal;
         }
 
+        [ValidationAspect(typeof(UserValidator))]
         public IResult Add(User entity)
         {
-            _user.Add(entity);
+            _userDal.Add(entity);
             return new SuccessResult();
         }
 
         public IResult Delete(User entity)
         {
-            _user.Delete(entity);
+            _userDal.Delete(entity);
             return new SuccessResult();
         }
 
         public IDataResult<User> GetById(int id)
         {
-            return new SuccessDataResult<User>(_user.Get(u=>u.Id==id));
+            return new SuccessDataResult<User>(_userDal.Get(u=>u.Id==id));
         }
 
         public IDataResult<List<User>> GetAll()
         {
-            return new SuccessDataResult<List<User>>(_user.GetAll());
+            return new SuccessDataResult<List<User>>(_userDal.GetAll());
         }
 
+        [ValidationAspect(typeof(UserValidator))]
         public IResult Update(User entity)
         {
-            _user.Update(entity);
+            _userDal.Update(entity);
             return new SuccessResult();
+        }
+
+        public IDataResult<User> GetByEmail(string email)
+        {
+            return new SuccessDataResult<User>(_userDal.Get(u=>u.Email.ToLower()==email.ToLower()));
         }
     }
 }

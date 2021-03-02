@@ -4,55 +4,89 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using DataAccess.Abstract;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
-        private IRentalDal _rental;
+        private IRentalDal _rentalDal;
 
-        public RentalManager(IRentalDal rental)
+        public RentalManager(IRentalDal rentalDal)
         {
-            _rental = rental;
+            _rentalDal = rentalDal;
         }
 
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental entity)
         {
-            var result = _rental.GetAll(r=>r.CarId==entity.CarId);
-            
-            foreach (var rental in result)
+            var result = BusinessRules.Run(CanARentalCarBeReturned(entity));
+            if (result!=null)
             {
-                if (rental.ReturnDate == null)
-                {
-                        return new ErrorResult();
-                }
+                return result;
             }
-            
-            _rental.Add(entity);
+
+
+            _rentalDal.Add(entity);
+            return new SuccessResult();
+        }
+
+        private IResult CanARentalCarBeReturned(Rental entity)
+        {
+            var result = _rentalDal.GetAll(r => r.CarId == entity.CarId && r.ReturnDate == null && r.ReturnDate > entity.RentDate).Count;
+
+            if (result>0)
+            {
+                return new ErrorResult();
+            }
+
             return new SuccessResult();
         }
 
         public IResult Delete(Rental entity)
         {
-            _rental.Delete(entity);
+            _rentalDal.Delete(entity);
             return new SuccessResult();
         }
 
         public IDataResult<Rental> GetById(int id)
         {
-            return new SuccessDataResult<Rental>(_rental.Get(r=>r.Id==id));
+            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
         }
 
         public IDataResult<List<Rental>> GetAll()
         {
-            return new SuccessDataResult<List<Rental>>(_rental.GetAll());
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
 
         public IResult Update(Rental entity)
         {
-            _rental.Update(entity);
+            _rentalDal.Update(entity);
             return new SuccessResult();
+        }
+
+        public IResult DeliverTheCar(Rental rental)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetAllRentalDetails()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetAllUndeliveredRentalDetails()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetAllDeliveredRentalDetails()
+        {
+            throw new NotImplementedException();
         }
     }
 }
