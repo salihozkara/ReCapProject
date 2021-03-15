@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Entities.Concrete;
 using DataAccess.Abstract;
 
 namespace Business.Concrete
@@ -49,9 +50,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<User> GetByEmail(string email)
+        public IDataResult<List<OperationClaim>> GetClaims(User user)
         {
-            return new SuccessDataResult<User>(_userDal.Get(u=>u.Email.ToLower()==email.ToLower()));
+            return new SuccessDataResult<List<OperationClaim>>(data: _userDal.GetClaims(user));
+        }
+
+        public IDataResult<User> GetByMail(string email)
+        {
+            return new SuccessDataResult<User>(data: _userDal.Get(u => u.Email == email));
         }
     }
 }

@@ -8,7 +8,6 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using Core.Business;
 
 namespace Business.Concrete
 {

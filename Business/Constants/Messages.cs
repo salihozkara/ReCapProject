@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Entities.Concrete;
+using System.Runtime.Serialization;
 
 namespace Business.Constants
 {
@@ -7,7 +8,6 @@ namespace Business.Constants
     {
         //Car
         public static string AddCarMessage = "Araç başarıyla eklendi.";
-
         public static string AddErrorCarMessage = "Araba açıklaması en az 2 karakterden oluşmalıdır ve günlük fiyatı da 0 liradan büyük olmalıdır.";
         public static string DeleteCarMessage = "Araç başarıyla silindi.";
         public static string EditCarMessage = "Araç başarıyla düzenlendi.";
@@ -67,5 +67,6 @@ namespace Business.Constants
         public static string DeleteCarImageMessage = "Araç resmi başarıyla silindi";
         public static string AboveImageAddingLimit = "Araç maksimum resim sayısına ulaştı. Resim ekleyemezsiniz";
         public static string IncorrectFileExtension = "Kabul edilmeyen dosya uzantısı";
+        internal static string AuthorizationDenied= "yetkiniz yok.";
     }
 }
