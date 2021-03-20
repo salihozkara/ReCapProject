@@ -76,7 +76,7 @@ namespace Business.Concrete
 
         public IDataResult<List<RentalDetailDto>> GetAllRentalDetails()
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetAllRentalDetails());
         }
 
         public IDataResult<List<RentalDetailDto>> GetAllUndeliveredRentalDetails()
