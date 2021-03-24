@@ -29,7 +29,7 @@ namespace Business.Concrete
         }
 
         //[SecuredOperation("")]
-        [CacheRemoveAspect("ICustomerService.Get")]]
+        [CacheRemoveAspect("ICustomerService.Get")]
         public IResult Delete(Customer entity)
         {
             _customer.Delete(entity);
