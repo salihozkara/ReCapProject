@@ -42,15 +42,16 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
-        //[HttpPost("add")]
-        //public IActionResult Add(int id,[FromForm] IFormFile image)
-        //{
-        //    var result = _carImageService.Add(image,new CarImage(){CarId = id});
-        //    if (result.Success)
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return BadRequest(result);
-        //}
+
+        [HttpGet("getcarimages")]
+        public IActionResult GetCarImages(int carId)
+        {
+            var result = _carImageService.GetAllByCarId(carId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }
