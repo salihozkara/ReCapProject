@@ -4,7 +4,10 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using DataAccess.Abstract;
@@ -15,78 +18,80 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         private IRentalDal _rentalDal;
+        private ICarService _carService;
 
         public RentalManager(IRentalDal rentalDal)
         {
             _rentalDal = rentalDal;
         }
 
+        //[SecuredOperation("")]
         [ValidationAspect(typeof(RentalValidator))]
+        [CacheRemoveAspect("IRentalService.Get")]
         public IResult Add(Rental entity)
         {
             var result = BusinessRules.Run(CanARentalCarBeReturned(entity));
-            if (result!=null)
+            if (result != null)
             {
                 return result;
             }
-
-
             _rentalDal.Add(entity);
             return new SuccessResult();
         }
 
-        private IResult CanARentalCarBeReturned(Rental entity)
-        {
-            var result = _rentalDal.GetAll(r => r.CarId == entity.CarId && r.ReturnDate == null && r.ReturnDate > entity.RentDate).Count;
-
-            if (result>0)
-            {
-                return new ErrorResult();
-            }
-
-            return new SuccessResult();
-        }
-
+        //[SecuredOperation("")]
+        [CacheRemoveAspect("IRentalService.Get")]
         public IResult Delete(Rental entity)
         {
             _rentalDal.Delete(entity);
             return new SuccessResult();
         }
-
-        public IDataResult<Rental> GetById(int id)
-        {
-            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
-        }
-
-        public IDataResult<List<Rental>> GetAll()
-        {
-            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
-        }
-
+        //[SecuredOperation("")]
+        [ValidationAspect(typeof(RentalValidator))]
+        [CacheRemoveAspect("IRentalService.Get")]
         public IResult Update(Rental entity)
         {
             _rentalDal.Update(entity);
             return new SuccessResult();
         }
 
-        public IResult DeliverTheCar(Rental rental)
+        [CacheAspect()]
+        public IDataResult<List<Rental>> GetAll()
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
 
+        [CacheAspect()]
         public IDataResult<List<RentalDetailDto>> GetAllRentalDetails()
         {
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetAllRentalDetails());
         }
 
-        public IDataResult<List<RentalDetailDto>> GetAllUndeliveredRentalDetails()
+        [CacheAspect()]
+        public IDataResult<Rental> GetById(int id)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
         }
-
+        
+        [CacheAspect()]
         public IDataResult<List<RentalDetailDto>> GetAllDeliveredRentalDetails()
         {
-            throw new NotImplementedException();
+            var rentalDetailDtos = _rentalDal.GetAllRentalDetails(p => p.ReturnDate != null);
+            if (rentalDetailDtos.Count > 0)
+                return new SuccessDataResult<List<RentalDetailDto>>(rentalDetailDtos, Messages.GetSuccessRentalMessage);
+            else
+                return new ErrorDataResult<List<RentalDetailDto>>(Messages.GetErrorRentalMessage);
+        }
+
+        private IResult CanARentalCarBeReturned(Rental entity)
+        {
+            var result = _rentalDal.GetAll(r => r.CarId == entity.CarId && r.ReturnDate == null && r.ReturnDate > entity.RentDate).Count;
+
+            if (result > 0)
+            {
+                return new ErrorResult();
+            }
+            return new SuccessResult();
         }
     }
 }

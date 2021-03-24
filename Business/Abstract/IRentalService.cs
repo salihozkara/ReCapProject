@@ -7,30 +7,17 @@ namespace Business.Abstract
 {
     public interface IRentalService
     {
-        /// <summary>
-        /// Aracı teslim al.
-        /// </summary>
-        IResult DeliverTheCar(Rental rental);
-
-        /// <summary>
-        /// Kiralanan ve kiralanmayan tüm araçların detaylı listesidir.
-        /// </summary>
+        IResult Add(Rental rental);
+        IResult Delete(Rental rental);
+        IResult Update(Rental rental);
+        IDataResult<List<Rental>> GetAll();
+        IDataResult<Rental> GetById(int rentalId);
         IDataResult<List<RentalDetailDto>> GetAllRentalDetails();
-
-        /// <summary>
-        /// Teslim alınmayan tüm araçların detaylı listesidir.
-        /// </summary>
-        IDataResult<List<RentalDetailDto>> GetAllUndeliveredRentalDetails();
 
         /// <summary>
         /// Teslim alınan tüm araçların detaylı listesidir.
         /// </summary>
         IDataResult<List<RentalDetailDto>> GetAllDeliveredRentalDetails();
 
-        IResult Add(Rental rental);
-        IResult Delete(Rental rental);
-        IResult Update(Rental rental);
-        IDataResult<List<Rental>> GetAll();
-        IDataResult<Rental> GetById(int id);
     }
 }

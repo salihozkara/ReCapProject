@@ -31,6 +31,17 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpPost("update")]
+        public IActionResult Update([FromForm] CarImagesDto carImagesDto)
+        {
+
+            var result = _carImageService.Update(carImagesDto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
         //[HttpPost("add")]
         //public IActionResult Add(int id,[FromForm] IFormFile image)
         //{
