@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Business.Abstract;
+using Business.Abstract.Dto;
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
@@ -18,10 +19,12 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         private ICarDal _carDal;
+        private ICarDetailDtoService _carDetailDtoService;
 
-        public CarManager(ICarDal carDal)
+        public CarManager(ICarDal carDal, ICarDetailDtoService carDetailDtoService)
         {
             _carDal = carDal;
+            _carDetailDtoService = carDetailDtoService;
         }
 
         //[SecuredOperation("")]
@@ -60,7 +63,7 @@ namespace Business.Concrete
         [CacheAspect()]
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
+            return new SuccessDataResult<List<CarDetailDto>>(_carDetailDtoService.GetAll().Data);
         }
 
         [CacheAspect()]

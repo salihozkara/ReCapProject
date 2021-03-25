@@ -2,6 +2,7 @@
 using Autofac.Extras.DynamicProxy;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Concrete.Dto;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.JWT;
@@ -39,6 +40,12 @@ namespace Business.DependencyResolvers.Autofac
             //auth
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
+            //CarDetail
+            builder.RegisterType<CarDetailDtoManager>().As<ICarService>().SingleInstance();
+            builder.RegisterType<EfCarDtoDal>().As<ICarDal>().SingleInstance();
+            //RentalDetail
+            builder.RegisterType<RentalDetailDtoManager>().As<IRentalService>().SingleInstance();
+            builder.RegisterType<EfRentalDtoDal>().As<IRentalDal>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
