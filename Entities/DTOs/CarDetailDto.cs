@@ -5,7 +5,6 @@ namespace Entities.DTOs
 {
     public class CarDetailDto:IDto
     {
-        [Key]
         public int CarId { get; set; }
         public string CarName { get; set; }
         public string ColorName { get; set; }
