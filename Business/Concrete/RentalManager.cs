@@ -1,10 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
@@ -18,7 +15,6 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         private IRentalDal _rentalDal;
-        private ICarService _carService;
 
         public RentalManager(IRentalDal rentalDal)
         {
