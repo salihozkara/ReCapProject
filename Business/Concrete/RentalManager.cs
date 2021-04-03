@@ -51,10 +51,26 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        public IResult GetCarControl(Rental rental)
+        {
+            var result = BusinessRules.Run(CanARentalCarBeReturned(rental));
+            if (result != null)
+            {
+                return result;
+            }
+            return new SuccessResult();
+        }
+
         [CacheAspect()]
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
+        }
+
+        [CacheAspect()]
+        public IDataResult<RentalDetailDto> GetByRentalIdRentalDetails(int rentalID)
+        {
+            return new SuccessDataResult<RentalDetailDto>(_rentalDal.GetRentalDetails(rentalID));
         }
 
         [CacheAspect()]
@@ -81,11 +97,11 @@ namespace Business.Concrete
 
         private IResult CanARentalCarBeReturned(Rental entity)
         {
-            var result = _rentalDal.GetAll(r => r.CarId == entity.CarId && r.ReturnDate == null && r.ReturnDate > entity.RentDate).Count;
+            var result = _rentalDal.GetAll(r => r.CarId == entity.CarId && (r.ReturnDate == null || r.ReturnDate > entity.RentDate)).Count;
 
             if (result > 0)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.CarNotAvaible);
             }
             return new SuccessResult();
         }

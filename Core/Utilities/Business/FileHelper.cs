@@ -6,21 +6,23 @@ using System.Windows;
 
 namespace Core.Utilities.Business
 {
-    public class FileHelper
+    public static class FileHelper
     {
+        private static string fullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot");
         public static IResult Upload(IFormFile file,string path)
         {
-            var type = Path.GetExtension(file.FileName);
-            var result=BusinessRules.Run(
+            var result = BusinessRules.Run(
                 CheckFileExists(file));
             if (result!=null)
             {
                 return result;
             }
-            string GuidKey = Guid.NewGuid().ToString();
-            CheckDirectoryExists(path);
-            CreateFile(path+GuidKey+type,file);
-            return new SuccessResult((path + GuidKey + type).Replace("\\", "/"));
+
+            string fileName = Guid.NewGuid().ToString("D") + Path.GetExtension(file.FileName).ToLower();
+            var filePath = Path.Combine(fullPath, path, fileName);
+            CheckDirectoryExists(Path.Combine(fullPath,path));
+            CreateFile(filePath,file);
+            return new SuccessResult(Path.Combine(path, fileName).Replace("\\", "/"));
         }
         
         private static IResult CheckFileExists(IFormFile file)

@@ -6,8 +6,8 @@ namespace Business.Constants
 {
     public static class FilePaths
     {
-        public static string ImageDefaultPath = "\\Images\\NotImage.jpg";
-        public static string ImageDirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "\\Images\\";
-        public static string ImageDynamicDirectoryPath = AppDomain.CurrentDomain.DynamicDirectory + "\\Images\\";
+        public static string ImageDirectory = "images"; // Klasör adı
+        public static string FileDirectory = "files"; // Klasör Adı
+        public static string NoImagePath = ImageDirectory + "/NoImage.jpg"; // Sabit resim yolu
     }
 }

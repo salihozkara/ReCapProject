@@ -36,13 +36,45 @@ namespace Business.Concrete
             CarImage carImage = new CarImage
             {
                 CarId = carImagesDto.CarId,
-                ImagePath = FileHelper.Upload(carImagesDto.ImageFile, FilePaths.ImageDirectoryPath).Message,
+                ImagePath = FileHelper.Upload(carImagesDto.ImageFile, FilePaths.ImageDirectory).Message,
                 Date = DateTime.Now
             };
             carImage.Date = DateTime.Now;
             _carImageDal.Add(carImage);
             return new SuccessResult(Messages.AddCarImageMessage);
         }
+
+        public IResult AddList(List<CarImagesDto> carImagesDtos)
+        {
+            var result = BusinessRules.Run();
+            if (result != null)
+            {
+                return result;
+            }
+
+            List<CarImage> carImages = new List<CarImage>();
+            foreach (var carImagesDto in carImagesDtos)
+            {
+                var result2 = FileHelper.Upload(carImagesDto.ImageFile, FilePaths.ImageDirectory);
+
+                if (result2.Success)
+                {
+                    carImages.Add(new CarImage
+                    {
+                        CarId = carImagesDto.CarId,
+                        Date = DateTime.Now,
+                        ImagePath = result2.Message,
+                    });
+                }
+                else
+                {
+                    return result2;
+                }
+            }
+            _carImageDal.AddList(carImages);
+            return new SuccessResult(Messages.AddCarImageMessage);
+        }
+
 
         //[SecuredOperation("")]
         [CacheRemoveAspect("ICarImageService.Get")]
@@ -73,12 +105,17 @@ namespace Business.Concrete
             {
                 Id = carImagesDto.Id,
                 CarId = carImagesDto.CarId,
-                ImagePath = FileHelper.Upload(carImagesDto.ImageFile, FilePaths.ImageDirectoryPath).Message,
+                ImagePath = FileHelper.Upload(carImagesDto.ImageFile, FilePaths.ImageDirectory).Message,
                 Date = DateTime.Now
             };
 
             _carImageDal.Update(carImage);
             return new SuccessResult();
+        }
+
+        public IResult UpdateList(List<CarImagesDto> carImagesDtos)
+        {
+            throw new NotImplementedException();
         }
 
         [CacheAspect()]

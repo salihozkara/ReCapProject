@@ -9,7 +9,7 @@ namespace Business.ValidationRules.FluentValidation
         {
             RuleFor(rental => rental.CarId).NotEmpty();
             RuleFor(rental => rental.CustomerId).NotEmpty();
-            RuleFor(rental => rental.RentDate).NotEmpty();
+           // RuleFor(rental => rental.RentDate).NotEmpty();
         }
     }
 }
